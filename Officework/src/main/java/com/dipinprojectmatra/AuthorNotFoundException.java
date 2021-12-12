@@ -1,8 +1,8 @@
 package com.dipinprojectmatra;
 
-public class AuthorNotFoundException extends RuntimeException {
+public class AuthorNotFoundException extends Exception {
     public AuthorNotFoundException(Long id){
-        super("Not Found"+id);
+        super("Not Found with id "+id);
     }
 }
 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="create-books-table" author="dipin">
+        <createTable tableName="books">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="published_date" type="date"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-authors-table" author="dipin">
+        <createTable tableName="authors">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-authors-books-table" author="dipin">
+        <createTable tableName="authors_books">
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="authors_books"
+                                 constraintName="fk_authors_books_author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authors"/>
+
+        <addForeignKeyConstraint baseColumnNames="book_id"
+                                 baseTableName="authors_books"
+                                 constraintName="fk_authors_books_book_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="books"/>
+
+        <addUniqueConstraint
+                tableName="authors_books"
+                columnNames="author_id, book_id"
+                constraintName="udx_authors_books_ids"/>
+    </changeSet>
+</databaseChangeLog>

@@ -2,9 +2,7 @@ package com.dipinprojectmatra.entity;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.List;
 @Entity
 @Table(name = "books")
 public class Book {
@@ -13,31 +11,26 @@ public class Book {
    private long id;
 @Column(name="title")
    private String title;
-   @Column(name="Description")
+   @Column(name="description")
    private String description;
-   @Column(name="Content")
-   private String Content;
-    @Column(name="posted_at")
-   private Date postedAt=new Date();
+
+   private Date publishedDate;
 
 
-
-   @Column(name="last_updated")
-   private Date LastUpdatedAt=new Date();
-
-    @ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-    @JoinTable(name="book_author",
-            joinColumns = {@JoinColumn(name="book_id")},
-    inverseJoinColumns= {@JoinColumn(name="author_id")})
-    private Set<Author> Authors=new HashSet<>();
-
+    @ManyToMany
+    @JoinTable(name = "authors_books",
+            joinColumns = {@JoinColumn(name = "book_id")},
+            inverseJoinColumns = {@JoinColumn(name = "author_id")}
+    )
+    private List<Author> authors;
     public Book() {
     }
 
-    public Book(String title, String description, String content) {
+    public Book(String title, String description, Date publishedDate) {
         this.title = title;
         this.description = description;
-        Content = content;
+        this.publishedDate = publishedDate;
+
     }
 
     public Book(long id) {
@@ -68,35 +61,19 @@ public class Book {
         this.description = description;
     }
 
-    public String getContent() {
-        return Content;
+    public Date getPublishedDate() {
+        return publishedDate;
     }
 
-    public void setContent(String content) {
-        Content = content;
+    public void setPublishedDate(Date publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
-    public Date getPostedAt() {
-        return postedAt;
+    public List<Author> getAuthors() {
+        return authors;
     }
 
-    public void setPostedAt(Date postedAt) {
-        this.postedAt = postedAt;
-    }
-
-    public Date getLastUpdatedAt() {
-        return LastUpdatedAt;
-    }
-
-    public void setLastUpdatedAt(Date lastUpdatedAt) {
-        LastUpdatedAt = lastUpdatedAt;
-    }
-
-    public Set<Author> getAuthors() {
-        return Authors;
-    }
-
-    public void setAuthors(Set<Author> authors) {
-        Authors = authors;
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 }

@@ -1,26 +1,12 @@
-package com.dipinprojectmatra.entity;
+package com.dipinprojectmatra.pojo.response;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "authors")
-public class Author {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AuthorResponseDto {
     private long id;
-
     private String name;
-
     private String email;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "authors")
-    private List<Book> books;
-
-    public Author() {
-
-    }
-
+    private List<BookResponseDto> books;
 
     public long getId() {
         return id;
@@ -29,7 +15,6 @@ public class Author {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;
@@ -47,13 +32,11 @@ public class Author {
         this.email = email;
     }
 
-    public List<Book> getBooks() {
+    public List<BookResponseDto> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(List<BookResponseDto> books) {
         this.books = books;
     }
 }
-
-

@@ -1,80 +1,52 @@
 package com.dipinprojectmatra.controller;
-import java.util.List;
 
 import com.dipinprojectmatra.AuthorNotFoundException;
-
 import com.dipinprojectmatra.entity.Author;
-import com.dipinprojectmatra.entity.Book;
-import com.dipinprojectmatra.repository.AuthorRepository;
+import com.dipinprojectmatra.pojo.response.AuthorResponseDto;
+import com.dipinprojectmatra.pojo.response.BookResponseDto;
+import com.dipinprojectmatra.service.AuthorService;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.swing.border.TitledBorder;
+import java.util.List;
 
 
 @RestController
 
 public class AuthorController {
-    private final AuthorRepository repository1;
+    private final AuthorService authorService;
 
 
-    public AuthorController(AuthorRepository repository1) {
-        this.repository1 = repository1;
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+
+
+    }
+
+
+    @GetMapping("/authors")
+    public List<AuthorResponseDto> getAllAuthor(@Param("noOfBooks") Integer noOfBooks) {
+        return authorService.getAllAuthor(noOfBooks);
+
+    }
+
+    @GetMapping("/authors/{authorId}")
+    public AuthorResponseDto getAuthor(@PathVariable("authorId") long authorId) throws AuthorNotFoundException {
+        return authorService.getAuthor(authorId);
+
+    }
+
+    @GetMapping("/authors/{authorId}/books")
+    public List<BookResponseDto> getBooks(@PathVariable("authorId") long authorId) throws AuthorNotFoundException {
+        return authorService.getBooksByAuthor(authorId);
 
     }
 
 
-    @GetMapping("/author")
-    public List<Author> all() {
-        return repository1.findAll();
-
+    @PostMapping("/authors")
+    Author addAuthor(@RequestBody Author author) {
+        return authorService.saveAuthor(author);
     }
-
-
-
-    @PostMapping("/author")
-    Author newAuthor(@RequestBody Author newAuthor) {
-        return repository1.save(newAuthor);
-
-
-    }
-    @GetMapping("/author/{id}")
-    Author one(@PathVariable Long id) {
-
-        return repository1.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException(id));
-    }
-
-
-    @PutMapping("/author/{id}")
-    Author replaceAuthor(@RequestBody Author newAuthor, @PathVariable Long id) {
-
-        return repository1.findById(id)
-                .map(author -> {
-                 author.setId(newAuthor.getId());
-                    author.setTitle(newAuthor.getTitle());
-                    return repository1.save(author);
-                })
-                .orElseGet(() -> {
-                    newAuthor.setId(id);
-                    return repository1.save(newAuthor);
-                });
-    }
-
-//    @GetMapping("/author/{id}/book")
-//    Book two(@PathVariable Long id){
-//        return repository.findAll();
-//    }
-
-    @DeleteMapping("/author/{id}")
-    void deleteAuthor(@PathVariable Long id) {
-        repository1.deleteById(id);
-    }
-
 }
 
